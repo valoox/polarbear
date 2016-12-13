@@ -1,3 +1,4 @@
 # Polar Bear
 
-Polar Bear Python library
+A Library.
+
