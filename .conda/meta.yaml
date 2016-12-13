@@ -1,0 +1,22 @@
+package:
+  name: polarbear
+  version: 0.0.1
+
+source:
+  path: ../.
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - numpy
+
+  test:
+    - nose
+
+about:
+  home: http://github.com/valoox/polarbear
+

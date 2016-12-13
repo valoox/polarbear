@@ -1,0 +1,3 @@
+"""Overriden on packaging. Please ignore."""
+
+__version__ = '0.0.0dev'
