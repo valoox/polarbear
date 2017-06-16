@@ -7,7 +7,7 @@ with open('./polarbear/__version__.py', 'w') as f:
     f.write('__version__ = "{version}"'.format(version=version))
 
 setup(
-    name='Polar Bear',
+    name='Polarbear',
     version=version,
     packages=find_packages(),
     scripts=[],
