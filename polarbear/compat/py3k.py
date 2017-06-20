@@ -1,4 +1,4 @@
-from abc import ABCMeta
+from abc import ABCMeta, abstractproperty, abstractmethod
 import six
 
 

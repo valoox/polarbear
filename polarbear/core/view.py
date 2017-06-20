@@ -76,6 +76,39 @@ class View(abstract(object)):
         """
         return len(self.shape)
 
+    @abstractproperty
+    def axes(self):
+        """Returns a sequence of `ndim` axes corresponding to each of the
+        axes of the View
+
+        Returns
+        -------
+        axes: tuple[Index]
+            The axes of the view
+        """
+        return ()
+
+    @abstractproperty
+    def aview(self):
+        """Returns a simple array-like view, which can be indexed as a
+        numpy array and behaves like it in every way.
+
+        Most indexed/labelled operations are simply mapped to this view
+
+        Returns
+        -------
+        view: np.ndarray-like[self.dtype](self.shape)
+            The view on which operations are carried out
+        """
+        pass
+
+    def __getitem__(self, item):
+        """Access to a selection in the view"""
+        if not isinstance(item, tuple):
+            item = (item,)
+        iitem = tuple(ax(at) for ax, at in zip(self.axes, item))
+        return self.aview[iitem]
+
 
 class HCube(View):
     """The HyperCube is the simplest implementation of the `View` interface,
@@ -99,25 +132,30 @@ class HCube(View):
     def __init__(self, data, axes, copy=False, dtype=None, broadcast=True):
         """Constructor"""
         self.data = np.array(data, dtype=dtype, copy=copy)
-        self.axes = ()
+        self._axes = ()
         for i, ax in enumerate(axes):
             ax = index.Index(ax)
             # Consistent: same length or broadcast
             l = self.data.shape[i]
             if l == len(ax) or (broadcast and l == 1):
-                self.axes += (ax,)
+                self._axes += (ax,)
             else:
                 raise ValueError(
                     "Inconsistent dimension {i}: data is of shape "
                     "{self.data.shape[i]}, but axis is of length {ax.size}",
                     i=i, self=self, ax=ax
                 )
-        rem = self.data.shape[len(self.axes):]
-        self.axes += tuple(index.Range(l) for l in rem)
+        rem = self.data.shape[len(self._axes):]
+        self._axes += tuple(index.Range(l) for l in rem)
         if broadcast:
             self.data = np.broadcast_to(
-                self.data, tuple(len(ax) for ax in self.axes)
+                self.data, tuple(len(ax) for ax in self._axes)
             )
+
+    @property
+    def axes(self):
+        """The indices/axes for the hypercube"""
+        return self._axes
 
     @property
     def shape(self):
@@ -129,3 +167,7 @@ class HCube(View):
         """There are as many dimensions as the underlying array"""
         return self.data.ndim
 
+    @property
+    def aview(self):
+        """Hypercube simple refer to the inner data as the numpy view"""
+        return self.data
