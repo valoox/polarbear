@@ -1,4 +1,4 @@
 # Polar Bear
 
-A Library.
+A
 
