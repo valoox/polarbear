@@ -1,5 +1,5 @@
 import numpy as np
-from ..view import view, View
+from ..data import view, View, DataSet
 
 
 def test_isinstance():
@@ -15,3 +15,6 @@ def test_view_fromarray():
     assert isinstance(v, np.ndarray)
 
 
+def test_dataset():
+    a = DataSet([[[1, 2, 3], [4, 5, 6]]], (range(10), ['a', 'b'], None))
+    assert a.shape == (10, 2, 3)
