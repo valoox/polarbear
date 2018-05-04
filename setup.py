@@ -5,17 +5,18 @@ from Cython.Build import cythonize
 
 version = os.environ.get('PKG_VERSION', '0.0.0dev')
 
+
 with open('./polarbear/__version__.py', 'w') as f:
     f.write('__version__ = "{version}"'.format(version=version))
 
 
 ext_modules = [
-    Extension(
-        "polarbear.core.arr",
-        ["./polarbear/core/arr.pyx"],
-        extra_compile_args=['-fopenmp'],
-        extra_link_args=['-fopenmp'],
-    )
+    # Extension(
+    #     "polarbear.core.arr",
+    #     ["./polarbear/core/arr.pyx"],
+    #     extra_compile_args=['-fopenmp'],
+    #     extra_link_args=['-fopenmp'],
+    # )
 ]
 
 setup(
